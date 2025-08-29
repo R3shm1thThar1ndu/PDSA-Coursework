@@ -116,6 +116,14 @@
             <version>3.25.5</version>
         </dependency>
 
+        <!-- GraphHopper updated version for route calculations -->
+        <dependency>
+            <groupId>com.graphhopper</groupId>
+            <artifactId>graphhopper-core</artifactId>
+            <version>7.0</version>
+        </dependency>
+
+
     </dependencies>
 
     <build>
