@@ -2,7 +2,6 @@ package com.pdsa.touristappbackend.routing;
 
 import com.pdsa.touristappbackend.model.Edge;
 import com.pdsa.touristappbackend.model.OsmNodeData;
-import com.pdsa.touristappbackend.util.Haversine;
 
 import java.sql.*;
 import java.util.*;
@@ -35,24 +34,21 @@ public class LazyGraph {
     }
 
     public OsmNodeData getNode(long id) {
-        return nodeCache.get(id); // ✅ Instant lookup
+        return nodeCache.get(id);
     }
+
+
 
     public List<Edge> neighbors(long id) throws Exception {
         List<Edge> edges = new ArrayList<>();
         try (PreparedStatement ps = conn.prepareStatement(
-                "SELECT to_node FROM edges WHERE from_node = ?")) {
+                "SELECT to_node, length FROM edges WHERE from_node = ?")) {
             ps.setLong(1, id);
             try (ResultSet rs = ps.executeQuery()) {
-                OsmNodeData src = getNode(id);
                 while (rs.next()) {
                     long toId = rs.getLong("to_node");
-                    OsmNodeData dst = getNode(toId);
-                    if (src != null && dst != null) {
-                        double d = Haversine.meters(src.getLat(), src.getLon(),
-                                dst.getLat(), dst.getLon());
-                        edges.add(new Edge(toId, d));
-                    }
+                    double length = rs.getDouble("length");
+                    edges.add(new Edge(toId, length));
                 }
             }
         }

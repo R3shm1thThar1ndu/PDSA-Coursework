@@ -28,7 +28,6 @@ public class GraphLoaderFromSqlite {
                 System.out.println("GraphLoader: loaded nodes=" + nodeCount);
             }
 
-            // Edges: compute weight using haversine between node coords
             try (Statement st = conn.createStatement();
                  ResultSet rs = st.executeQuery("SELECT from_node, to_node FROM edges")) {
 

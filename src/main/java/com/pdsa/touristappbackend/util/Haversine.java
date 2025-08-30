@@ -1,10 +1,8 @@
 package com.pdsa.touristappbackend.util;
 
-/**
- * Utility class to calculate the Haversine distance between two geographic points.
- */
+
 public final class Haversine {
-    private static final double R = 6371000.0; // meters
+    private static final double R = 6371000.0;
     private Haversine() {}
     public static double meters(double lat1, double lon1, double lat2, double lon2) {
         double dLat = Math.toRadians(lat2 - lat1);
