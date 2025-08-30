@@ -1,75 +1,62 @@
 package com.pdsa.touristappbackend.routing;
 
 import com.pdsa.touristappbackend.model.Edge;
-import com.pdsa.touristappbackend.model.Graph;
 import com.pdsa.touristappbackend.model.OsmNodeData;
 import com.pdsa.touristappbackend.util.Haversine;
 
 import java.sql.*;
 import java.util.*;
 
-public class LazyGraph extends Graph {
-    private final String sqlitePath;
+public class LazyGraph {
     private final Connection conn;
+    private final Map<Long, OsmNodeData> nodeCache = new HashMap<>();
 
     public LazyGraph(String sqlitePath) throws Exception {
-        this.sqlitePath = sqlitePath;
         Class.forName("org.sqlite.JDBC");
-        this.conn = DriverManager.getConnection("jdbc:sqlite:" + sqlitePath);
-        System.out.println("LazyGraph initialized with " + sqlitePath);
+        String url = "jdbc:sqlite:" + sqlitePath;
+        this.conn = DriverManager.getConnection(url);
+
+        loadNodes();
     }
 
-    public OsmNodeData getNode(long id) throws SQLException {
-        try (PreparedStatement ps = conn.prepareStatement(
-                "SELECT id, lat, lon FROM nodes WHERE id=?")) {
-            ps.setLong(1, id);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return new OsmNodeData(rs.getLong("id"),
-                            rs.getDouble("lat"),
-                            rs.getDouble("lon"));
-                }
+    private void loadNodes() throws SQLException {
+        try (Statement st = conn.createStatement();
+             ResultSet rs = st.executeQuery("SELECT id, lat, lon FROM nodes")) {
+            int count = 0;
+            while (rs.next()) {
+                long id = rs.getLong("id");
+                double lat = rs.getDouble("lat");
+                double lon = rs.getDouble("lon");
+                nodeCache.put(id, new OsmNodeData(id, lat, lon));
+                count++;
             }
+            System.out.println("LazyGraph: cached " + count + " nodes in memory");
         }
-        return null;
     }
 
-    public List<Edge> getNeighbors(long id) throws SQLException {
+    public OsmNodeData getNode(long id) {
+        return nodeCache.get(id); // ✅ Instant lookup
+    }
+
+    public List<Edge> neighbors(long id) throws Exception {
         List<Edge> edges = new ArrayList<>();
         try (PreparedStatement ps = conn.prepareStatement(
-                "SELECT to_node FROM edges WHERE from_node=?")) {
+                "SELECT to_node FROM edges WHERE from_node = ?")) {
             ps.setLong(1, id);
             try (ResultSet rs = ps.executeQuery()) {
-                OsmNodeData na = getNode(id);
+                OsmNodeData src = getNode(id);
                 while (rs.next()) {
-                    long to = rs.getLong("to_node");
-                    OsmNodeData nb = getNode(to);
-                    if (na != null && nb != null) {
-                        double d = Haversine.meters(
-                                na.getLat(), na.getLon(),
-                                nb.getLat(), nb.getLon());
-                        edges.add(new Edge(to, d));
+                    long toId = rs.getLong("to_node");
+                    OsmNodeData dst = getNode(toId);
+                    if (src != null && dst != null) {
+                        double d = Haversine.meters(src.getLat(), src.getLon(),
+                                dst.getLat(), dst.getLon());
+                        edges.add(new Edge(toId, d));
                     }
                 }
             }
         }
         return edges;
-    }
-
-    /** SQL nearest node search */
-    public long findNearest(double lat, double lon) throws SQLException {
-        try (PreparedStatement ps = conn.prepareStatement(
-                "SELECT id, lat, lon FROM nodes " +
-                        "ORDER BY ((lat-?)*(lat-?) + (lon-?)*(lon-?)) ASC LIMIT 1")) {
-            ps.setDouble(1, lat);
-            ps.setDouble(2, lat);
-            ps.setDouble(3, lon);
-            ps.setDouble(4, lon);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) return rs.getLong("id");
-            }
-        }
-        return -1;
     }
 
     public Connection getConnection() {

@@ -1,12 +1,8 @@
 package com.pdsa.touristappbackend.routing;
 
 import com.pdsa.touristappbackend.config.RoutingConfigProperties;
-import com.pdsa.touristappbackend.model.Graph;
-import com.pdsa.touristappbackend.routing.index.GridIndex;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
-import java.io.*;
 
 @Component
 @RequiredArgsConstructor
@@ -19,12 +15,13 @@ public class GraphProvider {
         synchronized (this) {
             if (lazyGraph != null) return lazyGraph;
             try {
+                // ✅ Pass SQLite path, LazyGraph will handle connection
                 lazyGraph = new LazyGraph(cfg.getSqlitePath());
-                System.out.println("LazyGraph initialized with SQLite: " + cfg.getSqlitePath());
+                System.out.println("GraphProvider: using LazyGraph with DB = " + cfg.getSqlitePath());
             } catch (Exception e) {
-                throw new RuntimeException("Failed to init LazyGraph", e);
+                throw new RuntimeException("Failed to init LazyGraph: " + e.getMessage(), e);
             }
+            return lazyGraph;
         }
-        return lazyGraph;
     }
 }
