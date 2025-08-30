@@ -1,44 +1,31 @@
 package com.pdsa.touristappbackend.controller;
 
-import com.pdsa.touristappbackend.model.Coordinate;
-import com.pdsa.touristappbackend.model.RouteResponse;
-import com.pdsa.touristappbackend.service.GeocodingService;
-import com.pdsa.touristappbackend.service.GraphService;
+import com.pdsa.touristappbackend.service.RoutingService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
-
 @RestController
-@CrossOrigin(origins = "*")
 @RequestMapping("/api/route")
+@RequiredArgsConstructor
+@CrossOrigin(origins = "*")
 public class RouteController {
+    private final RoutingService routingService;
 
-    private final GraphService graphService;
-    private final GeocodingService geocodingService;
+    @GetMapping("/by-coords")
+    public ResponseEntity<?> byCoords(
+            @RequestParam double startLat,
+            @RequestParam double startLon,
+            @RequestParam double endLat,
+            @RequestParam double endLon) {
 
-    public RouteController(GraphService graphService, GeocodingService geocodingService) {
-        this.graphService = graphService;
-        this.geocodingService = geocodingService;
-    }
-
-    @PostMapping("/calculate")
-    public ResponseEntity<?>CalculateRoute(@RequestBody Map<String, String> requestBody) {
-        try{
-            String startName = requestBody.get("start");
-            String endName = requestBody.get("end");
-
-            // Get coordinates from geocoding service
-            double[] startCoords = geocodingService.getCoordinates(startName);
-            double[] endCoords = geocodingService.getCoordinates(endName);
-
-            RouteResponse response = graphService.calculateRoute(
-                    new Coordinate(startCoords[0], startCoords[1]),
-                    new Coordinate(endCoords[0], endCoords[1])
+        try {
+            RoutingService.RouteResult r = routingService.routeByCoords(startLat, startLon, endLat, endLon);
+            return ResponseEntity.ok(r);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(
+                    java.util.Map.of("error", e.getMessage())
             );
-            return ResponseEntity.ok(response);
-        }catch (Exception e){
-            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 }
