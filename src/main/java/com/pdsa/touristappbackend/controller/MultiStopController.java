@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/api/route")
 public class MultiStopController {
 
