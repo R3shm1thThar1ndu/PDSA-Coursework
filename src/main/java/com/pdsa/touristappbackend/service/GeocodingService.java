@@ -11,7 +11,6 @@ public class GeocodingService {
     private final RestTemplate restTemplate = new RestTemplate();
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    // converts a place name to its latitude and longitude using the Nominatim API
     public double[] getCoordinates(String placename) throws Exception {
         String url ="https://nominatim.openstreetmap.org/search?format=json&q=" + placename + "&format=json&limit=1";
 

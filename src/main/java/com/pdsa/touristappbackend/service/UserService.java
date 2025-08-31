@@ -26,12 +26,10 @@ public class UserService {
             throw new RuntimeException("Username already exists");
         }
 
-        // Create new user
         User user = new User();
         user.setUsername(request.getUsername());
         user.setPassword(request.getPassword());
 
-        // Validate interests
         Set<Interest> userInterests = new HashSet<>();
         for (String interestName : request.getInterests()) {
             Interest interest = interestRepository.findByName(interestName)

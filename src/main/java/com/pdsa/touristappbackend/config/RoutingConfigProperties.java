@@ -11,7 +11,6 @@ public class RoutingConfigProperties {
     private String sqlitePath;
     private double gridCellSizeDeg = 0.005;
 
-    // property name matches application.properties:
     public String getSqlitePath() { return sqlitePath; }
     public double getGridCellSizeDeg() { return gridCellSizeDeg; }
 }

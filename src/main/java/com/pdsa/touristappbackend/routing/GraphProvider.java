@@ -15,7 +15,6 @@ public class GraphProvider {
         synchronized (this) {
             if (lazyGraph != null) return lazyGraph;
             try {
-
                 lazyGraph = new LazyGraph(cfg.getSqlitePath());
                 System.out.println("GraphProvider: using LazyGraph with DB = " + cfg.getSqlitePath());
             } catch (Exception e) {
