@@ -36,6 +36,13 @@ public class AStarRouter {
      * @param endId - ending node ID
      * @return - Result object containing the path and distance
      * @throws Exception - if graph access fails
+     * priority queue - to select the next node with the lowest f value
+     * map - to store all node records for quick access
+     * NodeRecord - to keep track of each node's g, f, and parent
+     * open set - nodes to be evaluated
+     * closed set - nodes already evaluated (not explicitly used here)
+     * reconstruct - to backtrack from end node to start node to build the path
+     * If no path is found, returns an empty path with infinite distance
      */
     public Result shortestPath(long startId, long endId) throws Exception {
         PriorityQueue<NodeRecord> open = new PriorityQueue<>(Comparator.comparingDouble(r -> r.f));

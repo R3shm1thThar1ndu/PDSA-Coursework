@@ -36,6 +36,7 @@ import java.util.*;
  */
 public class AStar {
 
+    // Result class to hold the distance and path
     public static class Result {
         private final double distanceMeters;
         private final List<Long> pathNodeIds;
@@ -54,12 +55,21 @@ public class AStar {
         }
     }
 
+    // Node entry for the priority queue
     private static class NodeEntry {
         long id;
         double f;
         NodeEntry(long id, double f) { this.id = id; this.f = f; }
     }
 
+    /**
+     * Find the shortest path between source and target nodes using A* algorithm.
+     * @param g - LazyGraph instance to provide graph data
+     * @param source - starting node ID
+     * @param target - ending node ID
+     * @return Result object containing the path and distance
+     * @throws Exception - if graph access fails
+     */
     public static Result shortestPath(LazyGraph g, long source, long target) throws Exception {
         if (source == target) return new Result(0.0, List.of(source));
 

@@ -11,6 +11,7 @@ import java.io.Serializable;
  * Fields:
  * - to: destination node id
  * - weightMeters: weight of the edge in meters
+ * serialVersionUID for serialization compatibility
  */
 @Data
 @AllArgsConstructor
