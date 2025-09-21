@@ -14,6 +14,9 @@ public class GraphProvider {
     private final RoutingConfigProperties cfg;
     private volatile LazyGraph lazyGraph;
 
+    /** Returns the singleton instance of LazyGraph, initializing it if necessary.
+     * @return LazyGraph instance
+     */
     public LazyGraph getLazyGraph() {
         if (lazyGraph != null) return lazyGraph;
         synchronized (this) {

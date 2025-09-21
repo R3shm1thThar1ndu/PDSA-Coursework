@@ -63,29 +63,68 @@ public class AStar {
     public static Result shortestPath(LazyGraph g, long source, long target) throws Exception {
         if (source == target) return new Result(0.0, List.of(source));
 
+        /** A* algorithm implementation
+         * gScore: cost from start to current node
+         * fScore: estimated cost from start to target through current node
+         * cameFrom: map of navigated nodes
+         * open: priority queue of discovered nodes to be evaluated
+         * closed: set of nodes already evaluated
+         * */
         Map<Long, Double> gScore = new HashMap<>();
         Map<Long, Double> fScore = new HashMap<>();
         Map<Long, Long> cameFrom = new HashMap<>();
         PriorityQueue<NodeEntry> open = new PriorityQueue<>(Comparator.comparingDouble(ne -> ne.f));
         gScore.put(source, 0.0);
 
+        /**
+         * h0: heuristic estimate from source to target
+         * Initialize fScore for source node
+         * Add source node to open set
+         */
         double h0 = heuristic(g, source, target);
         fScore.put(source, h0);
         open.add(new NodeEntry(source, h0));
         Set<Long> closed = new HashSet<>();
 
+        // Main loop
+        /**
+         * While there are nodes to evaluate in the open set:
+         *  - Poll the node with the lowest fScore
+         *  - If it's already in closed set, skip it
+         *  - If it's the target, reconstruct path and return result
+         *  - Otherwise, add it to closed set
+         *  - For each neighbor of the current node:
+         *      - If neighbor is in closed set, skip it
+         *      - Calculate tentative gScore
+         *      - If tentative gScore is better, update cameFrom, gScore, fScore
+         *      - If neighbor not in open set, add it with updated fScore
+         */
         while (!open.isEmpty()) {
             NodeEntry cur = open.poll();
             if (closed.contains(cur.id)) continue;
 
 
+            /**
+             * Debugging output: print visited node details
+             * - Node ID
+             * - Latitude and Longitude
+             * - fScore value
+             */
             OsmNodeData nodeData = g.getNode(cur.id);
             System.out.printf("Visiting node %d (lat=%.6f, lon=%.6f, f=%.2f)%n",
                     cur.id, nodeData.getLat(), nodeData.getLon(), cur.f);
 
+            // Early exit if target reached
             if (cur.id == target) break;
             closed.add(cur.id);
 
+            /**
+             * For each neighbor of the current node:
+             *  - Skip if already evaluated (in closed set)
+             *  - Calculate tentative gScore
+             *  - If better than existing gScore, update cameFrom, gScore, fScore
+             *  - If neighbor not in open set, add it with updated fScore
+             */
             for (Edge e : g.neighbors(cur.id)) {
                 long nb = e.getTo();
                 if (closed.contains(nb)) continue;
@@ -100,6 +139,13 @@ public class AStar {
             }
         }
 
+        /**
+         * Path reconstruction:
+         *  - If target not reached (not in gScore), return infinite distance and empty path
+         *  - Otherwise, backtrack from target to source using cameFrom map
+         *  - Construct path as list of node IDs
+         *  - Return Result with total distance and path
+         */
         if (!gScore.containsKey(target)) return new Result(Double.POSITIVE_INFINITY, List.of());
 
         LinkedList<Long> path = new LinkedList<>();
@@ -112,6 +158,14 @@ public class AStar {
         return new Result(gScore.get(target), path);
     }
 
+    /**
+     * Heuristic function: Haversine distance between two nodes
+     * @param g
+     * @param aId - source node ID
+     * @param bId - target node ID
+     * @return estimated distance in meters
+     * @throws Exception - if node retrieval fails
+     */
     private static double heuristic(LazyGraph g, long aId, long bId) throws Exception {
         OsmNodeData a = g.getNode(aId);
         OsmNodeData b = g.getNode(bId);

@@ -30,15 +30,46 @@ public class AStarRouter {
         this.graph = graph;
     }
 
+    /**
+     * Find the shortest path between two nodes using the A* algorithm.
+     * @param startId - starting node ID
+     * @param endId - ending node ID
+     * @return - Result object containing the path and distance
+     * @throws Exception - if graph access fails
+     */
     public Result shortestPath(long startId, long endId) throws Exception {
         PriorityQueue<NodeRecord> open = new PriorityQueue<>(Comparator.comparingDouble(r -> r.f));
         Map<Long, NodeRecord> allRecords = new HashMap<>();
 
+        /**
+         * Initialize the start node record and add it to the open set
+         * with g=0 and f=heuristic estimate to the end node
+         * g - cost from start to current node
+         * f - estimated cost from start to end through current node
+         */
         NodeRecord start = new NodeRecord(startId, null, 0,
                 heuristic(startId, endId));
         open.add(start);
         allRecords.put(startId, start);
 
+        // Main loop
+        /**
+         * While there are nodes to evaluate in the open set:
+         *  - Poll the node with the lowest f value
+         *  - If it's the end node, reconstruct and return the path
+         *  - For each neighbor of the current node:
+         *      - Calculate tentative g score
+         *      - If this path to neighbor is better, update its record and add to open set
+         *      f - estimated cost from start to end through current node
+         *      g - cost from start to current node
+         *      heuristic - estimated cost from current node to end node
+         *      parent - previous node in the path
+         *      Edge weight is in meters
+         *      If neighbor not in records, create new record
+         *      If neighbor already in records but new g is better, update it
+         *      Add updated neighbor to open set
+         *      If open set is empty and end not reached, return empty path with infinite distance
+         */
         while (!open.isEmpty()) {
             NodeRecord current = open.poll();
 
@@ -69,6 +100,13 @@ public class AStarRouter {
         return new Result(Collections.emptyList(), Double.POSITIVE_INFINITY);
     }
 
+    /**
+     * Heuristic function estimating cost from one node to another using Haversine distance.
+     * @param fromId - starting node ID
+     * @param toId - target node ID
+     * @return - estimated cost in meters
+     * @throws Exception - if node retrieval fails
+     */
     private double heuristic(long fromId, long toId) throws Exception {
         OsmNodeData from = graph.getNode(fromId);
         OsmNodeData to = graph.getNode(toId);

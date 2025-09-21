@@ -21,10 +21,19 @@ import java.util.*;
  * graph.close();
  */
 public class LazyGraph {
+    // SQLite connection
     private final Connection conn;
+    // In-memory cache of nodes
     private final Map<Long, OsmNodeData> nodeCache = new HashMap<>();
+    // Map of nodeId to connected component id
     private final Map<Long, Integer> componentMap = new HashMap<>();
 
+    /**
+     * Constructor to initialize LazyGraph with SQLite database path
+     * Loads all nodes into memory and builds connected components
+     * @param sqlitePath path to SQLite database file
+     * @throws Exception if database connection or queries fail
+     */
     public LazyGraph(String sqlitePath) throws Exception {
         Class.forName("org.sqlite.JDBC");
         String url = "jdbc:sqlite:" + sqlitePath;
@@ -33,6 +42,10 @@ public class LazyGraph {
         buildComponents();
     }
 
+    /**
+     * Close the database connection
+     * @throws SQLException - if closing the connection fails
+     */
     private void loadNodes() throws SQLException {
         try (Statement st = conn.createStatement();
              ResultSet rs = st.executeQuery("SELECT id, lat, lon FROM nodes")) {
@@ -48,6 +61,11 @@ public class LazyGraph {
         }
     }
 
+    /**
+     * Retrieve a node by its ID
+     * @param id - OSM node ID
+     * @return OsmNodeData or null if not found
+     */
     public OsmNodeData getNode(long id) {
         return nodeCache.get(id);
     }
@@ -56,6 +74,13 @@ public class LazyGraph {
         return nodeCache.values();
     }
 
+    /**
+     * Retrieve neighbors (outgoing edges) of a node
+     * Edges are loaded on demand from the database
+     * @param id - OSM node ID
+     * @return List of Edge objects representing outgoing edges
+     * @throws Exception - if database query fails
+     */
     public List<Edge> neighbors(long id) throws Exception {
         List<Edge> edges = new ArrayList<>();
         try (PreparedStatement ps = conn.prepareStatement(
@@ -77,6 +102,11 @@ public class LazyGraph {
         return edges;
     }
 
+    /**
+     * Build connected components using BFS
+     * Populates componentMap with nodeId to componentId mapping
+     * @throws Exception - if any error occurs during processing
+     */
     private void buildComponents() throws Exception {
         int compId = 0;
         Set<Long> visited = new HashSet<>();
