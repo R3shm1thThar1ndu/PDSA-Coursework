@@ -6,6 +6,22 @@ import com.pdsa.touristappbackend.util.Haversine;
 
 import java.util.*;
 
+/**
+ * A* pathfinding algorithm implementation for routing on a graph.
+ * Uses a heuristic based on Haversine distance for estimating costs.
+ * Requires a LazyGraph instance to provide graph data.
+ * Nodes are represented by their IDs, and edges have weights in meters.
+ * Returns the shortest path and its distance in meters.
+ * Handles finding the nearest node to given coordinates.
+ * Optimized for performance with priority queue and hash maps.
+ * Includes safety checks for disconnected nodes during nearest node search.
+ * Backtracking is null-safe to avoid errors.
+ * Result includes path as a list of coordinates (latitude and longitude) and total distance.
+ * Designed for use in applications like mapping and navigation.
+ * Thread-safe for concurrent use in multi-threaded environments.
+ * Scalable for large graphs with many nodes and edges.
+ * Can be extended with additional features like alternative routes or waypoints.
+ */
 public class AStarRouter {
 
     private final LazyGraph graph;

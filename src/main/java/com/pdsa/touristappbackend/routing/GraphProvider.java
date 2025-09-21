@@ -4,6 +4,10 @@ import com.pdsa.touristappbackend.config.RoutingConfigProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+/** Provides a singleton instance of LazyGraph initialized with the database path from configuration.
+ * Uses double-checked locking for thread-safe lazy initialization.
+ * Prints the database path to the console upon initialization.
+ */
 @Component
 @RequiredArgsConstructor
 public class GraphProvider {

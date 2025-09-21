@@ -7,6 +7,12 @@ import lombok.Setter;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * User entity representing a user in the system.
+ * It includes fields for id, username, password, and a set of interests.
+ * The interests are represented as a many-to-many relationship with the Interest entity.
+ * This entity is used for user authentication and interest management.
+ */
 @Entity
 @Table(name="users")
 @Getter

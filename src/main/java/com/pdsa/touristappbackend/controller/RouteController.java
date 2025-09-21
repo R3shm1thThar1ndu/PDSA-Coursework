@@ -5,6 +5,19 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
+/**
+ * RouteController class handling routing requests
+ * Endpoint:
+ * - GET /api/route/by-coords: get route between two coordinates
+ * Example request:
+ * /api/route/by-coords?startLat=...&startLon=...&endLat=...&endLon=...
+ * Response:
+ * {
+ *   "distanceMeters": total_distance,
+ *   "path": [ { "lat": ..., "lon": ... }, ... ]
+ * }
+ */
 @RestController
 @RequestMapping("/api/route")
 @RequiredArgsConstructor

@@ -11,6 +11,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Service class for managing user interests and calculating their weights.
+ * This class interacts with UserInterestRepository, InterestRepository, and UserRepository
+ * to fetch and process user interest data.
+ * The main functionality includes retrieving a map of user interests with associated weights.
+ * The weight is currently set to 1 for each interest, but this can be extended in the future.
+ * The service throws a RuntimeException if the user is not found.
+ */
 @Service
 public class UserInterestService {
 

@@ -8,6 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
+/** * AuthController class handling user registration and login endpoints
+ * Endpoints:
+ * - POST /api/auth/register: register a new user
+ * - POST /api/auth/login: authenticate a user
+ */
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/api/auth")

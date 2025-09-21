@@ -13,6 +13,19 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * RoutingService provides functionality to compute the shortest path between two geographical coordinates
+ * using a graph representation of the road network. It utilizes the A* algorithm for pathfinding
+ * and interacts with a SQLite database to retrieve graph nodes and edges.
+ * The service includes methods to find the nearest connected graph nodes to given coordinates
+ * and to compute the route between these nodes.
+ * The results include the total distance and the list of coordinates along the path.
+ * Error handling is implemented to manage exceptions during database access and pathfinding.
+ * Designed for use in applications such as mapping, navigation, and location-based services.
+ * Thread-safe for concurrent requests in a multi-threaded environment.
+ * Scalable for large graphs with many nodes and edges.
+ * Can be extended with additional features like alternative routes or waypoints.
+ */
 @Service
 @RequiredArgsConstructor
 public class RoutingService {

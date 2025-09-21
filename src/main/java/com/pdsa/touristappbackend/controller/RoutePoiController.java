@@ -9,8 +9,24 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
+
+/**
+ * RoutePoiController class handling routing with POI endpoints
+ * Endpoint:
+ * - GET /api/route/poi: get route with POIs based on user interests
+ * Example request:
+ * /api/route/poi?username=...&password=...&startLat=...&startLon=...&endLat=...&endLon=...
+ * Response:
+ * {
+ *   "distanceMeters": total_distance,
+ *   "path": [ { "lat": ..., "lon": ... }, ... ],
+ *   "userInterests": { "interest1": weight1, ... },
+ *   "pois": [ { "id": ..., "name": ..., "lat": ..., "lon": ..., "category": ..., "rating": ... }, ... ]
+ * }
+ */
 @RestController
 @RequestMapping("/api/route")
+@CrossOrigin(origins = "*")
 public class RoutePoiController {
 
     private final AStarRouter router;

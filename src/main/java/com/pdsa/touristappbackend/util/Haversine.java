@@ -1,6 +1,16 @@
 package com.pdsa.touristappbackend.util;
 
 
+/**
+ * * Utility class for calculating the Haversine distance between two geographic coordinates.
+ * * The Haversine formula determines the great-circle distance between two points on a sphere given their longitudes and latitudes.
+ * * This implementation assumes a spherical Earth with a radius of 6,371 kilometers.
+ * * The distance is returned in meters.
+ * * Reference: https://en.wikipedia.org/wiki/Haversine_formula
+ * * Usage: Haversine.meters(lat1, lon1, lat2, lon2)
+ * * where lat1, lon1 are the latitude and longitude of the first point,
+ * * and lat2, lon2 are the latitude and longitude of the second point.
+ */
 public final class Haversine {
     private static final double R = 6371000.0;
     private Haversine() {}

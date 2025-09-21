@@ -7,6 +7,20 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
+/**
+ * MultiStopController class handling multi-stop routing endpoint
+ * Endpoint:
+ * - GET /api/route/multi-stop: calculate route with multiple stops
+ * Example request:
+ * /api/route/multi-stop?startLat=...&startLon=...&endLat=...&endLon=...&stopLat=...&stopLon=...
+ * (stopLat and stopLon can be repeated for multiple stops)
+ * Response:
+ * {
+ *   "distanceMeters": total_distance,
+ *   "path": [ { "lat": ..., "lon": ... }, ... ],
+ *   "stopsCount": number_of_stops
+ * }
+ */
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/api/route")

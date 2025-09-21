@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
+// Repository interface for UserInterest entity with method to find interests by user ID
 public interface UserInterestRepository extends JpaRepository<UserInterest, UserInterestId> {
     List<UserInterest> findByUserId(Long userId);
 }

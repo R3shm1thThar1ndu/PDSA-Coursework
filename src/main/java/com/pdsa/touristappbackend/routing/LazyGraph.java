@@ -7,6 +7,19 @@ import com.pdsa.touristappbackend.util.Haversine;
 import java.sql.*;
 import java.util.*;
 
+/**
+ * LazyGraph class for managing a graph of OSM nodes and edges with lazy loading from SQLite
+ * nodes are cached in memory, edges are loaded on demand
+ * connected components are precomputed for quick access
+ * Usage:
+ * LazyGraph graph = new LazyGraph("path/to/sqlite.db");
+ * OsmNodeData node = graph.getNode(nodeId);
+ * List<Edge> edges = graph.neighbors(nodeId);
+ * int compId = graph.getComponent(nodeId);
+ * graph.getAllNodes();
+ * graph.getConnection();
+ * graph.close();
+ */
 public class LazyGraph {
     private final Connection conn;
     private final Map<Long, OsmNodeData> nodeCache = new HashMap<>();

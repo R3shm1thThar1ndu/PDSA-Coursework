@@ -3,6 +3,16 @@ package com.pdsa.touristappbackend.model;
 import java.io.Serializable;
 import java.util.Objects;
 
+
+/**
+ * Composite key class for UserInterest entity
+ * Consists of userId and interestId
+ * Implements Serializable and overrides equals and hashCode methods
+ * Used for mapping many-to-many relationship between User and Interest entities
+ * Fields:
+ * - userId: ID of the user
+ * - interestId: ID of the interest
+ */
 public class UserInterestId implements Serializable {
     private Long userId;
     private Long interestId;

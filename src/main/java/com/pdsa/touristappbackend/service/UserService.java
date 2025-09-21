@@ -11,6 +11,20 @@ import org.springframework.stereotype.Service;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Service class for user-related operations such as registration and login.
+ * Handles user creation, interest association, and credential validation.
+ * Uses UserRepository and InterestRepository for database interactions.
+ * Throws RuntimeException for error cases like existing usernames or invalid credentials.
+ * Methods:
+ * - register(UserRegisterRequest request): Registers a new user with interests.
+ * - login(String username, String password): Validates user credentials and returns the user.
+ * @see UserRepository
+ * @see InterestRepository
+ * @see User
+ * @see Interest
+ * @see UserRegisterRequest
+ */
 @Service
 public class UserService {
 

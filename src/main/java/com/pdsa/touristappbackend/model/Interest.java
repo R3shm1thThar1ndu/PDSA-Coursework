@@ -6,6 +6,11 @@ import lombok.NoArgsConstructor;
 
 import jakarta.persistence.*;
 
+/**
+ * Interest entity representing a specific interest or hobby.
+ * Each interest has a unique ID and a name.
+ * This entity is used to categorize users based on their interests.
+ */
 @Entity
 @Table(name = "interests")
 @Getter

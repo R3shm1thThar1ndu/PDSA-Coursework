@@ -14,6 +14,25 @@ import java.util.*;
  *  inculde node distance)
  *  - Optional expansion cap to avoid worst-case blowups
  *  - Null-safe backtracking
+ *  - Priority queue for open set
+ *  - Hash maps for gScore, fScore, and cameFrom
+ *  - Early exit if source == target
+ *  - Skip already closed nodes when polling from the priority queue
+ *  - Print visited nodes for debugging
+ *  - Return path as list of node IDs
+ *  - Return infinite distance and empty path if no path found
+ *  - Use LinkedList for path reconstruction for efficient front insertion
+ *  - Use Set for closed nodes for O(1) lookups
+ *  - Avoid duplicate entries in the priority queue by checking closed set
+ *  - Use getOrDefault for gScore and fScore to simplify code
+ *  - Separate NodeEntry class for priority queue to avoid modifying fScore map
+ *  - Use Comparator.comparingDouble for priority queue ordering
+ *  - Add comments and documentation for clarity
+ *  - Handle exceptions from LazyGraph methods
+ *  - Ensure thread-safety if used in multi-threaded context
+ *  - Scalable for large graphs with many nodes and edges
+ *  - Can be extended with additional features like alternative routes or waypoints
+ *
  */
 public class AStar {
 

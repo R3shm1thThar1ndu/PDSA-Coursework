@@ -6,6 +6,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+/**
+ *  Repository interface for Interest entity with method to find by name
+ */
 @Repository
 public interface InterestRepository extends JpaRepository<Interest, Long> {
     Optional<Interest> findByName(String name);
