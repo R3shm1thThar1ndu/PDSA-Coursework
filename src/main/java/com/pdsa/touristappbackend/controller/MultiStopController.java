@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
 /**
- * MultiStopController class handling multi-stop routing endpoint
+ * MultiStopController class handling multi-stop routing
  * Endpoint:
  * - GET /api/route/multi-stop: calculate route with multiple stops
  * Example request:
